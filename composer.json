@@ -1,0 +1,18 @@
+{
+    "name": "nicklabs/simple-image",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nicklabs\\SimpleImage\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "nick",
+            "email": "weist.wei@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
