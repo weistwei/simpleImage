@@ -1,6 +1,6 @@
 <?php
 
-namespace NickStudio\Image;
+namespace NickLabs\Image;
 
 use GdImage;
 use Exception;
