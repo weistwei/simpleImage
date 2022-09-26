@@ -4,7 +4,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Nicklabs\\SimpleImage\\": "src/"
+            "NickLabs\\SimpleImage\\": "src/"
         }
     },
     "authors": [
