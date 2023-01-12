@@ -144,12 +144,13 @@ class SimpleImage{
     /**
      * @param string $filePath
      * @param string $fileName
-     * @param null $permissions
+     * @param int $quality
+     * @param $permissions
      * @return false|string
      * @author Nick <weist.wei@gmail.com>
      * @date 2021/11/30
      */
-    public function outputJpeg(string $filePath, string $fileName, $permissions = null){
+    public function outputJpeg(string $filePath, string $fileName, int $quality = 75, $permissions = null){
         $fileName = $filePath . DIRECTORY_SEPARATOR . $fileName . '.jpeg';
         return $this->save($this->imageResource, $fileName, IMAGETYPE_JPEG, $permissions);
     }
@@ -204,14 +205,14 @@ class SimpleImage{
      * @author Nick <weist.wei@gmail.com>
      * @date 2021/11/30
      */
-    private function save($image, string $filePathWithName, int $imageType = IMAGETYPE_PNG, $permissions = null){
+    private function save($image, string $filePathWithName, int $imageType = IMAGETYPE_PNG, $permissions = null,int $quality = 75){
         $status = false;
         switch($imageType){
             case IMAGETYPE_PNG:
                 $status = imagepng($image, $filePathWithName);
                 break;
             case IMAGETYPE_JPEG:
-                $status = imagejpeg($image, $filePathWithName);
+                $status = imagejpeg($image, $filePathWithName, $quality);
                 break;
             case IMAGETYPE_GIF;
                 $status = imagegif($image, $filePathWithName);
@@ -226,20 +227,20 @@ class SimpleImage{
         return $status ? basename($filePathWithName) : false;
     }
 
-//    /**
-//     * @param int $width
-//     * @param int $height
-//     * @author Nick <weist.wei@gmail.com>
-//     * @date 2021/11/30
-//     */
-//    public function resizeFromWidthAndHeight(int $width, int $height){
-//        $newImage = imagecreatetruecolor($width, $height);
-//        imagecopyresampled($newImage, $this->imageResource, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
-//
-//        $filePath = public_path('/uploads') . DIRECTORY_SEPARATOR . uniqid() . '-' . time() . '.png';
-//
-//        $this->save($newImage, $filePath, IMAGETYPE_PNG);
-//    }
+    //    /**
+    //     * @param int $width
+    //     * @param int $height
+    //     * @author Nick <weist.wei@gmail.com>
+    //     * @date 2021/11/30
+    //     */
+    //    public function resizeFromWidthAndHeight(int $width, int $height){
+    //        $newImage = imagecreatetruecolor($width, $height);
+    //        imagecopyresampled($newImage, $this->imageResource, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
+    //
+    //        $filePath = public_path('/uploads') . DIRECTORY_SEPARATOR . uniqid() . '-' . time() . '.png';
+    //
+    //        $this->save($newImage, $filePath, IMAGETYPE_PNG);
+    //    }
 
     /**
      * @param int $scale
@@ -250,6 +251,26 @@ class SimpleImage{
     public function resizeFromScale(int $scale): SimpleImage{
         $newWidth = $this->getWidth() * $scale / 100;
         $newHeight = $this->getHeight() * $scale / 100;
+        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+        imagecopyresampled($newImage, $this->imageResource, 0, 0, 0, 0, $newWidth, $newHeight, $this->getWidth(), $this->getHeight());
+
+        $this->imageResource = $newImage;
+        return $this;
+    }
+
+    /**
+     * @param int $width
+     * @return SimpleImage
+     * @author Nick <weist.wei@gmail.com>
+     * @date 2021/12/3
+     */
+    public function resizeFromWidth(int $width): SimpleImage{
+        if($width > $this->getWidth()){
+            return $this;
+        }
+        $scale = $width / $this->getWidth();
+        $newWidth = $this->getWidth() * $scale;
+        $newHeight = $this->getHeight() * $scale;
         $newImage = imagecreatetruecolor($newWidth, $newHeight);
         imagecopyresampled($newImage, $this->imageResource, 0, 0, 0, 0, $newWidth, $newHeight, $this->getWidth(), $this->getHeight());
 
