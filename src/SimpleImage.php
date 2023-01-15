@@ -224,7 +224,11 @@ class SimpleImage{
         if($permissions != null){
             chmod($filePathWithName, $permissions);
         }
-        return $status ? basename($filePathWithName) : false;
+
+        $fragments = explode('/',$filePathWithName);
+        $basename = end($fragments);
+
+        return $status ? $basename : false;
     }
 
     //    /**
