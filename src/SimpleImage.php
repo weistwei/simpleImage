@@ -193,7 +193,7 @@ class SimpleImage{
         ob_end_clean();
         return empty($base64string)
             ? ""
-            : 'data:image/png;base64,' . base64_encode($base64string);
+            : base64_encode($base64string);
     }
 
     /**
