@@ -193,7 +193,7 @@ class SimpleImage{
         ob_end_clean();
         return empty($base64string)
             ? ""
-            : base64_encode($base64string);
+            : 'data:image/png;base64,' . base64_encode($base64string);
     }
 
     /**
@@ -209,7 +209,8 @@ class SimpleImage{
         $status = false;
         switch($imageType){
             case IMAGETYPE_PNG:
-                $status = imagepng($image, $filePathWithName);
+                imagesavealpha($image, true);
+                $status = imagepng($image, $filePathWithName,9);
                 break;
             case IMAGETYPE_JPEG:
                 $status = imagejpeg($image, $filePathWithName, $quality);
@@ -279,6 +280,8 @@ class SimpleImage{
         imagecopyresampled($newImage, $this->imageResource, 0, 0, 0, 0, $newWidth, $newHeight, $this->getWidth(), $this->getHeight());
 
         $this->imageResource = $newImage;
+        $this->width = $newWidth;
+        $this->height = $newHeight;
         return $this;
     }
 
